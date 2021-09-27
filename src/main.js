@@ -2,6 +2,7 @@
 let color_buffer_1 = new Canvas("canvas");
 color_buffer_1.clear();
 
+
 /******************************************************************************
  * Vértices do modelo (cubo) centralizado no seu espaco do objeto. Os dois
  * vértices extremos do cubo são (-1,-1,-1) e (1,1,1), logo, cada aresta do cubo
