@@ -48,13 +48,15 @@ for (let i = 0; i < 8; ++i){
 
 //--------------------- ESP. UNIVERSO ==> ESP. DA CÂMERA ----------------------
 
-// let cam_pos = new THREE.Vector3(1.3,1.7,2.0);     // posição da câmera no esp. do Universo.
-// let cam_look_at = new THREE.Vector3(0.0,0.0,0.0); // ponto para o qual a câmera aponta.
-// let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
-
-let cam_pos = new THREE.Vector3(5,10,5);     // posição da câmera no esp. do Universo.
-let cam_look_at = new THREE.Vector3(5,10,0); // ponto para o qual a câmera aponta.
+let cam_pos = new THREE.Vector3(1.3,1.7,2.0);     // posição da câmera no esp. do Universo.
+let cam_look_at = new THREE.Vector3(0.0,0.0,0.0); // ponto para o qual a câmera aponta.
 let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
+
+
+// Exemplo resolvido em sala (útil para debugar)
+// let cam_pos = new THREE.Vector3(5,10,5);     // posição da câmera no esp. do Universo.
+// let cam_look_at = new THREE.Vector3(5,10,0); // ponto para o qual a câmera aponta.
+// let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
 
 // Construindo a Matriz view
 
