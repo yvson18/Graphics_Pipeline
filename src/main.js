@@ -1,26 +1,23 @@
-// Cria um color buffer para armazenar a imagem final.
-let color_buffer_1 = new Canvas("canvas");
-color_buffer_1.clear();
+/*******************************************************************************
+                           PIPELINE GRÁFICO
+          Autores: João Victor Galvão e Yvson Nunes Figueiredo
+*******************************************************************************/
 
 
-/******************************************************************************
- * Vértices do modelo (cubo) centralizado no seu espaco do objeto. Os dois
- * vértices extremos do cubo são (-1,-1,-1) e (1,1,1), logo, cada aresta do cubo
- * tem comprimento igual a 2.
- *****************************************************************************/
-//                                   X     Y     Z    W (coord. homogênea)
+// Descrição do(s) Objeto(s):
+
+// Lista de Vértices
+//                                  X     Y     Z    W (coord. homogênea)
 let vertices = [new THREE.Vector4(-1.0, -1.0, -1.0, 1.0),
-            new THREE.Vector4( 1.0, -1.0, -1.0, 1.0),
-            new THREE.Vector4( 1.0, -1.0,  1.0, 1.0),
-            new THREE.Vector4(-1.0, -1.0,  1.0, 1.0),
-            new THREE.Vector4(-1.0,  1.0, -1.0, 1.0),
-            new THREE.Vector4( 1.0,  1.0, -1.0, 1.0),
-            new THREE.Vector4( 1.0,  1.0,  1.0, 1.0),
-            new THREE.Vector4(-1.0,  1.0,  1.0, 1.0)];
+                new THREE.Vector4( 1.0, -1.0, -1.0, 1.0),
+                new THREE.Vector4( 1.0, -1.0,  1.0, 1.0),
+                new THREE.Vector4(-1.0, -1.0,  1.0, 1.0),
+                new THREE.Vector4(-1.0,  1.0, -1.0, 1.0),
+                new THREE.Vector4( 1.0,  1.0, -1.0, 1.0),
+                new THREE.Vector4( 1.0,  1.0,  1.0, 1.0),
+                new THREE.Vector4(-1.0,  1.0,  1.0, 1.0)];
 
-/******************************************************************************
- * As 12 arestas do cubo, indicadas através dos índices dos seus vértices.
- *****************************************************************************/
+// Lista de Arestas
 let edges = [[0,1],
             [1,2],
             [2,3],
@@ -34,105 +31,146 @@ let edges = [[0,1],
             [2,6],
             [3,7]];
 
-/******************************************************************************
- * Matriz Model (modelagem): Esp. Objeto --> Esp. Universo. 
- * OBS: A matriz está carregada inicialmente com a identidade.
- *****************************************************************************/
+
+//--------------------- ESP. OBJETO ==> ESP. UNIVERSO -------------------------
+
+// Matriz Model
 let m_model = new THREE.Matrix4();
-
+//Identidade
 m_model.set(1.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
-        0.0, 0.0, 0.0, 1.0);
+            0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0);
 
-for (let i = 0; i < 8; ++i)
-vertices[i].applyMatrix4(m_model);
+for (let i = 0; i < 8; ++i){ 
+   vertices[i].applyMatrix4(m_model);
+}
 
-/******************************************************************************
- * Parâmetros da camera sintética.
- *****************************************************************************/
-let cam_pos = new THREE.Vector3(1.3,1.7,2.0);     // posição da câmera no esp. do Universo.
-let cam_look_at = new THREE.Vector3(0.0,0.0,0.0); // ponto para o qual a câmera aponta.
+//--------------------- ESP. UNIVERSO ==> ESP. DA CÂMERA ----------------------
+
+// let cam_pos = new THREE.Vector3(1.3,1.7,2.0);     // posição da câmera no esp. do Universo.
+// let cam_look_at = new THREE.Vector3(0.0,0.0,0.0); // ponto para o qual a câmera aponta.
+// let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
+
+let cam_pos = new THREE.Vector3(5,10,5);     // posição da câmera no esp. do Universo.
+let cam_look_at = new THREE.Vector3(5,10,0); // ponto para o qual a câmera aponta.
 let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
 
-/******************************************************************************
- * Matriz View (visualização): Esp. Universo --> Esp. Câmera
- * OBS: A matriz está carregada inicialmente com a identidade. 
- *****************************************************************************/
+// Construindo a Matriz view
 
-// Derivar os vetores da base da câmera a partir dos parâmetros informados acima.
+let cam_dir = cam_look_at.clone().add(cam_pos.clone().multiplyScalar(-1.0)); //  cam_look_at (O) - cam_pos(P) = D = PO
 
-// ---------- implementar aqui ----------------------------------------------
+let zc = cam_dir.clone().multiplyScalar(-1.0).normalize(); // Zcam = -D / ||D||
+let xc = cam_up.clone().cross(zc).normalize();// Xcam = u x Zcam / ||u x Zcam||
+let yc = zc.clone().cross(xc);// Ycam = Zcam x Xcam
 
-// Construir 'm_bt', a inversa da matriz de base da câmera.
+console.log(xc);
+console.log(yc);
+console.log(zc);
 
-// ---------- implementar aqui ----------------------------------------------
-let m_bt = new THREE.Matrix4();
+// Matriz Bt
 
-m_bt.set(1.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
-        0.0, 0.0, 0.0, 1.0);
+let m_Bt = new THREE.Matrix4();
+m_Bt.set(xc.x, xc.y, xc.z, 0.0,
+         yc.x, yc.y, yc.z, 0.0,
+         zc.x, zc.y, zc.z, 0.0,
+         0.0,  0.0,  0.0,  1.0);
 
-// Construir a matriz 'm_t' de translação para tratar os casos em que as
-// origens do espaço do universo e da câmera não coincidem.
+console.log(m_Bt);
 
-// ---------- implementar aqui ----------------------------------------------
-let m_t = new THREE.Matrix4();
+let m_T = new THREE.Matrix4();
+m_T.set(1.0, 0.0, 0.0, -cam_pos.x,
+        0.0, 1.0, 0.0, -cam_pos.y,
+        0.0, 0.0, 1.0, -cam_pos.z,
+        0.0, 0.0, 0.0,  1.0      );
 
-m_t.set(1.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
-        0.0, 0.0, 0.0, 1.0);
+console.log(m_T);
 
-// Constrói a matriz de visualização 'm_view' como o produto
-//  de 'm_bt' e 'm_t'.
-let m_view = m_bt.clone().multiply(m_t);
+let m_View = new THREE.Matrix4(); m_View.multiplyMatrices(m_Bt,m_T);
 
-for (let i = 0; i < 8; ++i)
-    vertices[i].applyMatrix4(m_view);
+console.log(m_View);
 
-/******************************************************************************
- * Matriz de Projecao: Esp. Câmera --> Esp. Recorte
- * OBS: A matriz está carregada inicialmente com a identidade. 
- *****************************************************************************/
 
-// ---------- implementar aqui ----------------------------------------------
-let m_projection = new THREE.Matrix4();
+// /******************************************************************************
+//  * Matriz View (visualização): Esp. Universo --> Esp. Câmera
+//  * OBS: A matriz está carregada inicialmente com a identidade. 
+//  *****************************************************************************/
 
-m_projection.set(1.0, 0.0, 0.0, 0.0,
-                0.0, 1.0, 0.0, 0.0,
-                0.0, 0.0, 1.0, 0.0,
-                0.0, 0.0, 0.0, 1.0);
+// // Derivar os vetores da base da câmera a partir dos parâmetros informados acima.
 
-for (let i = 0; i < 8; ++i)
-vertices[i].applyMatrix4(m_projection);
+// // ---------- implementar aqui ----------------------------------------------
 
-/******************************************************************************
- * Homogeneizacao (divisao por W): Esp. Recorte --> Esp. Canônico
- *****************************************************************************/
+// // Construir 'm_bt', a inversa da matriz de base da câmera.
 
-// ---------- implementar aqui ----------------------------------------------
+// // ---------- implementar aqui ----------------------------------------------
+// let m_bt = new THREE.Matrix4();
 
-/******************************************************************************
- * Matriz Viewport: Esp. Canônico --> Esp. Tela
- * OBS: A matriz está carregada inicialmente com a identidade. 
- *****************************************************************************/
+// m_bt.set(1.0, 0.0, 0.0, 0.0,
+//         0.0, 1.0, 0.0, 0.0,
+//         0.0, 0.0, 1.0, 0.0,
+//         0.0, 0.0, 0.0, 1.0);
 
-// ---------- implementar aqui ----------------------------------------------
-let m_viewport = new THREE.Matrix4();
+// // Construir a matriz 'm_t' de translação para tratar os casos em que as
+// // origens do espaço do universo e da câmera não coincidem.
 
-m_viewport.set(1.0, 0.0, 0.0, 0.0,
-                0.0, 1.0, 0.0, 0.0,
-                0.0, 0.0, 1.0, 0.0,
-                0.0, 0.0, 0.0, 1.0);
+// // ---------- implementar aqui ----------------------------------------------
+// let m_t = new THREE.Matrix4();
 
-for (let i = 0; i < 8; ++i)
-vertices[i].applyMatrix4(m_viewport);
+// m_t.set(1.0, 0.0, 0.0, 0.0,
+//         0.0, 1.0, 0.0, 0.0,
+//         0.0, 0.0, 1.0, 0.0,
+//         0.0, 0.0, 0.0, 1.0);
 
-/******************************************************************************
- * Rasterização
- *****************************************************************************/
+// // Constrói a matriz de visualização 'm_view' como o produto
+// //  de 'm_bt' e 'm_t'.
+// let m_view = m_bt.clone().multiply(m_t);
 
-// ---------- implementar aqui ----------------------------------------------
+// for (let i = 0; i < 8; ++i)
+//     vertices[i].applyMatrix4(m_view);
+
+// /******************************************************************************
+//  * Matriz de Projecao: Esp. Câmera --> Esp. Recorte
+//  * OBS: A matriz está carregada inicialmente com a identidade. 
+//  *****************************************************************************/
+
+// // ---------- implementar aqui ----------------------------------------------
+// let m_projection = new THREE.Matrix4();
+
+// m_projection.set(1.0, 0.0, 0.0, 0.0,
+//                 0.0, 1.0, 0.0, 0.0,
+//                 0.0, 0.0, 1.0, 0.0,
+//                 0.0, 0.0, 0.0, 1.0);
+
+// for (let i = 0; i < 8; ++i)
+// vertices[i].applyMatrix4(m_projection);
+
+// /******************************************************************************
+//  * Homogeneizacao (divisao por W): Esp. Recorte --> Esp. Canônico
+//  *****************************************************************************/
+
+// // ---------- implementar aqui ----------------------------------------------
+
+// /******************************************************************************
+//  * Matriz Viewport: Esp. Canônico --> Esp. Tela
+//  * OBS: A matriz está carregada inicialmente com a identidade. 
+//  *****************************************************************************/
+
+// // ---------- implementar aqui ----------------------------------------------
+// let m_viewport = new THREE.Matrix4();
+
+// m_viewport.set(1.0, 0.0, 0.0, 0.0,
+//                 0.0, 1.0, 0.0, 0.0,
+//                 0.0, 0.0, 1.0, 0.0,
+//                 0.0, 0.0, 0.0, 1.0);
+
+// for (let i = 0; i < 8; ++i)
+// vertices[i].applyMatrix4(m_viewport);
+
+// /******************************************************************************
+//  * Rasterização
+//  *****************************************************************************/
+// Cria um color buffer para armazenar a imagem final.
+// let color_buffer_1 = new Canvas("canvas");
+// color_buffer_1.clear();
+// // ---------- implementar aqui ----------------------------------------------
 
