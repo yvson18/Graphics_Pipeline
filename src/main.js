@@ -42,9 +42,11 @@ m_model.set(1.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 1.0, 0.0,
             0.0, 0.0, 0.0, 1.0);
 
-for (let i = 0; i < 8; ++i){ 
-   vertices[i].applyMatrix4(m_model);
-}
+
+// m_model * pontos            
+// for (let i = 0; i < 8; ++i){ 
+//    vertices[i].applyMatrix4(m_model);
+// }
 
 //--------------------- ESP. UNIVERSO ==> ESP. DA CÂMERA ----------------------
 
@@ -88,10 +90,17 @@ m_T.set(1.0, 0.0, 0.0, -cam_pos.x,
 
 console.log(m_T);
 
-let m_View = new THREE.Matrix4(); m_View.multiplyMatrices(m_Bt,m_T);
+let m_view = new THREE.Matrix4(); m_view.multiplyMatrices(m_Bt,m_T);
 
-console.log(m_View);
+console.log(m_view);
 
+// // m_view * ponto  
+// for (let i = 0; i < 8; ++i){
+//     vertices[i].applyMatrix4(m_View);
+// }
+        
+
+//--------------------- ESP. CÂMERA ==> ESP. DE RECORTE ----------------------
 
 // /******************************************************************************
 //  * Matriz View (visualização): Esp. Universo --> Esp. Câmera
