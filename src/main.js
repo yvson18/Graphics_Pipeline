@@ -44,9 +44,9 @@ m_model.set(1.0, 0.0, 0.0, 0.0,
 
 
 // m_model * pontos            
-// for (let i = 0; i < 8; ++i){ 
-//    vertices[i].applyMatrix4(m_model);
-// }
+for (let i = 0; i < 8; ++i){ 
+   vertices[i].applyMatrix4(m_model);
+}
 
 //--------------------- ESP. UNIVERSO ==> ESP. DA CÂMERA ----------------------
 
@@ -68,9 +68,9 @@ let zc = cam_dir.clone().multiplyScalar(-1.0).normalize(); // Zcam = -D / ||D||
 let xc = cam_up.clone().cross(zc).normalize();// Xcam = u x Zcam / ||u x Zcam||
 let yc = zc.clone().cross(xc);// Ycam = Zcam x Xcam
 
-console.log(xc);
-console.log(yc);
-console.log(zc);
+//console.log(xc);
+//console.log(yc);
+//console.log(zc);
 
 // Matriz Bt
 
@@ -80,7 +80,7 @@ m_Bt.set(xc.x, xc.y, xc.z, 0.0,
          zc.x, zc.y, zc.z, 0.0,
          0.0,  0.0,  0.0,  1.0);
 
-console.log(m_Bt);
+//console.log(m_Bt);
 
 let m_T = new THREE.Matrix4();
 m_T.set(1.0, 0.0, 0.0, -cam_pos.x,
@@ -88,100 +88,72 @@ m_T.set(1.0, 0.0, 0.0, -cam_pos.x,
         0.0, 0.0, 1.0, -cam_pos.z,
         0.0, 0.0, 0.0,  1.0      );
 
-console.log(m_T);
+//console.log(m_T);
 
 let m_view = new THREE.Matrix4(); m_view.multiplyMatrices(m_Bt,m_T);
 
-console.log(m_view);
+//console.log(m_view);
 
 // // m_view * ponto  
-// for (let i = 0; i < 8; ++i){
-//     vertices[i].applyMatrix4(m_View);
-// }
+for (let i = 0; i < 8; ++i){
+    vertices[i].applyMatrix4(m_view);
+}
         
-
 //--------------------- ESP. CÂMERA ==> ESP. DE RECORTE ----------------------
 
-// /******************************************************************************
-//  * Matriz View (visualização): Esp. Universo --> Esp. Câmera
-//  * OBS: A matriz está carregada inicialmente com a identidade. 
-//  *****************************************************************************/
+let m_projection = new THREE.Matrix4();
+let d = 1;
 
-// // Derivar os vetores da base da câmera a partir dos parâmetros informados acima.
+// Construindo a Matriz de Projecao
 
-// // ---------- implementar aqui ----------------------------------------------
+// matriz de projeção com correcao
+m_projection.set(1.0, 0.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0, 0.0,
+                 0.0, 0.0, 1.0,   d,
+                 0.0, 0.0,-1/d, 0.0);
 
-// // Construir 'm_bt', a inversa da matriz de base da câmera.
 
-// // ---------- implementar aqui ----------------------------------------------
-// let m_bt = new THREE.Matrix4();
+// m_projection * ponto
+for (let i = 0; i < 8; ++i){
+    vertices[i].applyMatrix4(m_projection);
+}
 
-// m_bt.set(1.0, 0.0, 0.0, 0.0,
-//         0.0, 1.0, 0.0, 0.0,
-//         0.0, 0.0, 1.0, 0.0,
-//         0.0, 0.0, 0.0, 1.0);
+//console.log(vertices[0]);
 
-// // Construir a matriz 'm_t' de translação para tratar os casos em que as
-// // origens do espaço do universo e da câmera não coincidem.
+//--------------------- ESP. DE RECORTE ==> ESP. CANÔNICO ----------------------
 
-// // ---------- implementar aqui ----------------------------------------------
-// let m_t = new THREE.Matrix4();
+//Homogeneizacao (divisao por W)
+for (let i = 0; i < 8; ++i){
+    vertices[i].divideScalar(vertices[i].w);
+}
 
-// m_t.set(1.0, 0.0, 0.0, 0.0,
-//         0.0, 1.0, 0.0, 0.0,
-//         0.0, 0.0, 1.0, 0.0,
-//         0.0, 0.0, 0.0, 1.0);
+//console.log(vertices[0]);
 
-// // Constrói a matriz de visualização 'm_view' como o produto
-// //  de 'm_bt' e 'm_t'.
-// let m_view = m_bt.clone().multiply(m_t);
+//--------------------- ESP. CANÔNICO  ==> ESP. TELA ----------------------
 
-// for (let i = 0; i < 8; ++i)
-//     vertices[i].applyMatrix4(m_view);
+let m_Tr = new THREE.Matrix4();
+m_Tr.set(1.0, 0.0, 0.0, 1.0,
+         0.0, 1.0, 0.0, 1.0,
+         0.0, 0.0, 1.0, 0.0,
+         0.0, 0.0, 0.0, 1.0);
 
-// /******************************************************************************
-//  * Matriz de Projecao: Esp. Câmera --> Esp. Recorte
-//  * OBS: A matriz está carregada inicialmente com a identidade. 
-//  *****************************************************************************/
+let m_S = new THREE.Matrix4();
+let S = 128.0; // considerando um canvas quadrado
+m_S.set(S/2, 0.0, 0.0, 0.0,
+        0.0, S/2, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0 );
 
-// // ---------- implementar aqui ----------------------------------------------
-// let m_projection = new THREE.Matrix4();
+let m_viewport = new THREE.Matrix4();m_viewport.multiplyMatrices(m_S,m_Tr);
 
-// m_projection.set(1.0, 0.0, 0.0, 0.0,
-//                 0.0, 1.0, 0.0, 0.0,
-//                 0.0, 0.0, 1.0, 0.0,
-//                 0.0, 0.0, 0.0, 1.0);
+console.log(m_viewport);
+for (let i = 0; i < 8; ++i){
+   vertices[i].applyMatrix4(m_viewport);
+}
 
-// for (let i = 0; i < 8; ++i)
-// vertices[i].applyMatrix4(m_projection);
+//---------------------RASTEIRIZACAO ----------------------
 
-// /******************************************************************************
-//  * Homogeneizacao (divisao por W): Esp. Recorte --> Esp. Canônico
-//  *****************************************************************************/
-
-// // ---------- implementar aqui ----------------------------------------------
-
-// /******************************************************************************
-//  * Matriz Viewport: Esp. Canônico --> Esp. Tela
-//  * OBS: A matriz está carregada inicialmente com a identidade. 
-//  *****************************************************************************/
-
-// // ---------- implementar aqui ----------------------------------------------
-// let m_viewport = new THREE.Matrix4();
-
-// m_viewport.set(1.0, 0.0, 0.0, 0.0,
-//                 0.0, 1.0, 0.0, 0.0,
-//                 0.0, 0.0, 1.0, 0.0,
-//                 0.0, 0.0, 0.0, 1.0);
-
-// for (let i = 0; i < 8; ++i)
-// vertices[i].applyMatrix4(m_viewport);
-
-// /******************************************************************************
-//  * Rasterização
-//  *****************************************************************************/
 // Cria um color buffer para armazenar a imagem final.
 // let color_buffer_1 = new Canvas("canvas");
 // color_buffer_1.clear();
 // // ---------- implementar aqui ----------------------------------------------
-
