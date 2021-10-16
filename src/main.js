@@ -68,9 +68,9 @@ let zc = cam_dir.clone().multiplyScalar(-1.0).normalize(); // Zcam = -D / ||D||
 let xc = cam_up.clone().cross(zc).normalize();// Xcam = u x Zcam / ||u x Zcam||
 let yc = zc.clone().cross(xc);// Ycam = Zcam x Xcam
 
-//console.log(xc);
-//console.log(yc);
-//console.log(zc);
+// console.log(xc);
+// console.log(yc);
+// console.log(zc);
 
 // Matriz Bt
 
@@ -149,6 +149,15 @@ let m_viewport = new THREE.Matrix4();m_viewport.multiplyMatrices(m_S,m_Tr);
 console.log(m_viewport);
 for (let i = 0; i < 8; ++i){
    vertices[i].applyMatrix4(m_viewport);
+}
+
+
+//console.log(vertices);
+
+//---------------------  REAL ==> INTEIRO ----------------------
+
+for (let i = 0; i < 8; ++i){
+    vertices[i].round();
 }
 
 //---------------------RASTEIRIZACAO ----------------------
