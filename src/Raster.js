@@ -23,7 +23,7 @@ color_buffer.clear();
 
 function MidPointLineAlgorithm(xi, yi, xf, yf, color_0, color_1) {
     // coversão para o centro
-    [xi,yi,xf,yf] = [xi+64 ,yi+64  , xf+64 , yf+64 ];      
+    //[xi,yi,xf,yf] = [xi+64 ,yi+64  , xf+64 , yf+64 ];      
     
     // Escreva seu código aqui!
     var m = (yf - yi) / (xf - xi);
