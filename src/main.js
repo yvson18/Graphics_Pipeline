@@ -8,6 +8,7 @@
 
 // ---------------------------------QUADRADO-----------------------------------
 
+//CUBO
 // Lista de Vértices
 //                     X     Y     Z    W (coord. homogênea)
 // let vertices = [
