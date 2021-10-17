@@ -11,9 +11,11 @@ Como o objetivo do trabalho foi a implementação dos estágios geométricos, fo
 
 ## Exemplo 1
 
+Para a construção do cubo, foi utilizada a matriz identidade como matriz model e os parâmetros de câmera especificados no documento da atividade.
+
 <br>
 <p align = "center">
-<img  style = "justify-content: center" src= "car_oct.png" alt =   "drawing" width = "306" height = "298">
+<img  style = "justify-content: center" src="img/cubo.png" alt =   "drawing" width = "503" height = "501">
 </p>
 
 <p align = "center">
@@ -22,15 +24,29 @@ Como o objetivo do trabalho foi a implementação dos estágios geométricos, fo
 
 ## Exemplo 2
 
+Para a construção da pirâmide, após a definição dos vértices e arestas, foi realizada uma rotação em torno do eixo x de -90°, além de um ajuste na posição da câmera, para melhorar o enquadramento.
+
 <br>
 <p align = "center">
-<img  style = "justify-content: center" src= "car_oct.png" alt =   "drawing" width = "306" height = "298">
+<img  style = "justify-content: center" src= "img/piramide.png" alt =   "drawing" width = "506" height = "364">
 </p>
 
 <p align = "center">
-<b> legenda futura</b><p>
+<b>Pirâmide com base hexagonal</b><p>
 </p>
 
+## Exemplo 3
+
+Na construção do símbolo do jogo The Sims, mais uma vez foram definidos os vértices e as arestas, em seguida foi realizada a rotação em torno do eixo z de 30° para melhorar a visualização, a câmera também foi ajustada para melhorar o enquadramento.
+
+<br>
+<p align = "center">
+<img  style = "justify-content: center" src= "img/thesims.png" alt =   "drawing" width = "501.6" height = "375.6">
+</p>
+
+<p align = "center">
+<b>Símbolo do jogo The Sims</b><p>
+</p>
 
 ## Referências
 
