@@ -15,7 +15,7 @@ Para a construção do cubo, foi utilizada a matriz identidade como matriz model
 
 <br>
 <p align = "center">
-<img  style = "justify-content: center" src="img/cubo.png" alt =   "drawing" width = "503" height = "501">
+<img  style = "justify-content: center" src="img/cubo.png" alt =   "drawing" width = "300" height = "300">
 </p>
 
 <p align = "center">
@@ -48,6 +48,9 @@ Na construção do símbolo do jogo The Sims, mais uma vez foram definidos os v�
 <b>Símbolo do jogo The Sims</b><p>
 </p>
 
+
+
+Uma possível melhoria a ser implementada é uma função que faça rotações em multiplos eixos.
 ## Referências
 
 https://www.cs.uaf.edu/2013/spring/cs493/lecture/01_24_vectors.html (**exemplos de operações com vetores no ThreeJs**)
